@@ -1,0 +1,5 @@
+winget upgrade
+winget upgrade --all
+
+for screen record windows+Alt+R
+To see the file windows+G

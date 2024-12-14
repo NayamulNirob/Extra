@@ -1,0 +1,5 @@
+1.What Is Object in JAVA?
+
+Objects are the instances of a class that are created to use the attributes and methods of a class.
+
+2.
