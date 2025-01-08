@@ -1,2 +1,14 @@
 winget upgrade
+
+winget upgrade --id Notepad++
+
+
 winget upgrade --all
+
+winget source list
+
+winget source reset --force
+
+
+for screen record windows+Alt+R
+To see the file windows+G
