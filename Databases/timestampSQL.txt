@@ -1,0 +1,6 @@
+-- query to see data as it was certain time ago
+select * from <table> as of timestamp systimestamp - interval '1' minute;
+-- to use flashback table "row movement" should be enabled
+alter table <table> enable row movement;
+-- flashback table as it was certain time ago
+flashback table <table> to timestamp systimestamp - interval '1' minute;
