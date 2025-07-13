@@ -4,3 +4,9 @@ select * from <table> as of timestamp systimestamp - interval '1' minute;
 alter table <table> enable row movement;
 -- flashback table as it was certain time ago
 flashback table <table> to timestamp systimestamp - interval '1' minute;
+
+
+
+
+---Drop table with forign key 
+drop table <table name> cascade constraints;
