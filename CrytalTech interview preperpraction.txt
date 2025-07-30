@@ -1,0 +1,246 @@
+🔧 Backend (Java, Spring Boot, WebFlux, R2DBC)
+
+Java 21
+
+Major Features Used in Production:
+Java 21 introduces virtual threads, record patterns, sequenced collections, and pattern matching for switch. I've used virtual threads for high-concurrency I/O operations, significantly reducing thread usage and improving performance in microservices.
+
+Virtual vs. Platform Threads:
+Virtual threads are lightweight and managed by the JVM, allowing high concurrency. Platform threads are heavier, tied to OS threads, and consume more resources.
+
+Record, Sealed, and Pattern Matching:
+
+record: Immutable data carriers with built-in equals/hashCode.
+
+sealed: Restricts which classes can extend a type.
+
+Pattern Matching: Used in switch or instanceof for concise, type-safe conditions.
+
+Spring Boot 3.2.2 / WebFlux
+4. Reactive vs. Imperative Programming:
+Reactive programming is event-driven and non-blocking. Imperative is synchronous and blocking. Reactive is better for high-throughput systems.
+
+WebFlux vs. Spring MVC:
+WebFlux is non-blocking/reactive, supports backpressure, and uses Mono and Flux. Spring MVC is thread-per-request and blocking.
+
+Mono and Flux:
+
+Mono: 0 or 1 item.
+
+Flux: 0 to many items.
+Used for reactive data pipelines and asynchronous operations.
+
+Backpressure in WebFlux:
+Handled using operators like .limitRate() or .onBackpressureBuffer() to control data flow and prevent consumer overload.
+
+Lifecycle of WebFlux Request:
+Request -> RouterFunction -> HandlerFunction -> Service Layer -> Database via R2DBC -> Response via Mono/Flux.
+
+R2DBC & PostgreSQL
+9. R2DBC vs. JDBC:
+R2DBC is reactive/non-blocking, better suited for WebFlux. JDBC is blocking and uses traditional threads.
+
+Reactive Transactions:
+Use DatabaseClient.inTransaction(), propagate context, and manage commit/rollback manually.
+
+Complex Queries in PostgreSQL:
+Experience with joins, CTEs, window functions, indexes, query plans, and performance tuning using EXPLAIN ANALYZE.
+
+Schema Migrations:
+Use Liquibase/Flyway with versioned SQL scripts managed per microservice and applied during deployment.
+
+🧹 Frontend (React 19, Vite, Tailwind)
+
+React 19 / Microfrontend
+13. New Features:
+React 19 includes better Suspense support, Server Components, actions API, and React Compiler for optimization.
+
+Microfrontend Architecture:
+Use Module Federation or dynamic imports. Each team builds independently deployable modules loaded into a shell app.
+
+Dynamic Module Loading:
+Load microfrontends via lazy-loaded routes or module federation in Webpack/Vite, allowing on-demand module rendering.
+
+Global State Handling:
+Use shared context providers, Redux, or event buses to synchronize state across microfrontends.
+
+Suspense & Concurrent Features:
+Use Suspense for async data loading, fallback UI, and concurrency for smoother rendering and data fetching.
+
+Vite
+18. Vite vs. Webpack:
+Vite uses native ESM and esbuild, offering faster development and hot reload. Webpack is slower and config-heavy.
+
+Vite Production Build:
+Set base path, configure Rollup options, optimize chunking, and define environment variables in vite.config.ts.
+
+Hot Module Replacement:
+Vite uses native ESM with HMR support. It instantly replaces updated modules without full reloads.
+
+Tailwind / MUI
+21. Tailwind Pros/Cons:
+Pros: Utility-first, fast, responsive design. Cons: HTML clutter, learning curve. MUI offers prebuilt components.
+
+Responsive Design in Tailwind:
+Use breakpoints like sm:, md:, lg: with utility classes to create mobile-first responsive layouts.
+
+Tailwind UI Component Example:
+Built a card component with shadow, hover effects, responsive image, and text using flex, grid, and rounded classes.
+
+🔐 Microservices Architecture
+
+Monoliths vs. Microservices:
+Monolith: Single deployable unit. Microservices: Decoupled services with independent deployment.
+
+Loose Coupling:
+Achieved via API contracts, async messaging (Kafka), service registries, and versioning.
+
+Inter-Service Communication:
+REST for simple queries, gRPC for efficient binary RPC, Kafka for async events.
+
+Service Registry:
+Use Consul or Eureka with client-side discovery and load balancing.
+
+Transaction Management:
+Use Saga pattern for distributed transactions with compensation logic.
+
+🔊 Kafka / Event-Driven Architecture
+
+Kafka Experience:
+Created producers/consumers, schema validation with Avro, async workflows, consumer groups for scalability.
+
+Message Structuring with Avro:
+Define schema, register in Confluent Schema Registry, serialize/deserialize with Kafka client APIs.
+
+Kafka Topics vs. Partitions:
+Topic: Logical stream. Partition: Unit of parallelism and order guarantee. Messages in a partition maintain order.
+
+Message Reliability & Order:
+Use replication, acknowledgment strategies, partition keys, and idempotent producers.
+
+Event-Driven System Example:
+Developed a lab module where test orders are events consumed by lab service, which then publishes results.
+
+🔒 Security (Keycloak, OAuth2, JWT)
+
+Keycloak Integration:
+Use spring-boot-starter-oauth2-resource-server, configure issuer URI, client ID, and validate JWT.
+
+OAuth2 vs. OpenID Connect:
+OAuth2 is for authorization. OIDC extends it for authentication with ID tokens.
+
+RBAC/ABAC Implementation:
+Define roles/permissions in Keycloak. Use token claims for RBAC. ABAC includes attributes like department, location.
+
+Secure REST APIs with JWT:
+Issue JWT from Keycloak. Validate signature and claims in Spring Security filters.
+
+HL7/FHIR Usage:
+Used FHIR to structure patient and lab data. Ensures semantic interoperability across systems.
+
+⚙️ DevOps & Deployment
+
+Dockerizing Spring Boot:
+Use multi-stage Dockerfile. Build with JDK, run with JRE or distroless image. Define health checks.
+
+Kubernetes Deployment:
+Write Helm charts, define services, deployments, ingress. Use autoscalers and resource limits.
+
+CI/CD with GitHub Actions/ArgoCD:
+Pipeline includes build, test, Docker image push, and ArgoCD sync to Kubernetes cluster.
+
+Monitoring Tools:
+Prometheus + Grafana for metrics. Spring Actuator + custom endpoints. Loki/ELK for logs.
+
+Logging & Alerting:
+Use FluentBit for log shipping, Loki/ELK stack, Alertmanager for alerts based on Prometheus rules.
+
+🧢 Testing & Quality
+
+WebFlux Testing:
+Use @WebFluxTest, WebTestClient, and Mockito. Use TestContainers for DB integration tests.
+
+React Testing Frameworks:
+React Testing Library, Jest, Cypress for E2E. Use MSW to mock APIs.
+
+Kafka Testing:
+Use @EmbeddedKafka, assert messages with KafkaTestUtils, test schema compatibility.
+
+Test Automation in CI/CD:
+Integrate unit, integration, and contract tests into GitHub Actions workflow.
+
+Load Testing:
+Use Apache JMeter or k6 to simulate user load, test system under stress.
+
+🧰 System Design / Architecture
+
+Appointment Module Design:
+Backend: WebFlux + R2DBC + Kafka.
+Frontend: React + Tailwind. Features include calendar, patient selection, booking.
+
+Inventory-Billing Consistency:
+Use Kafka events for stock changes. Implement idempotency and confirmation mechanisms.
+
+Redis Caching Strategy:
+Read-through cache with TTL. Use Redis for patient lookup and recent visit data.
+
+Kafka Schema Evolution:
+Manage with Schema Registry. Use backward-compatible changes. Version schemas explicitly.
+
+API Versioning:
+Use URL versioning (/v1/), header-based versioning for gradual rollouts.
+
+📚 Healthcare Domain Specific
+
+HL7 & FHIR in Hospitals:
+HL7/FHIR used to structure health records. Enables secure and standardized data exchange.
+
+Compliance Standards Impact:
+Affect data retention, audit logging, encryption, consent tracking, and access control.
+
+Healthcare Integration Challenges:
+Legacy systems, inconsistent formats, complex workflows, and strict data privacy laws.
+
+🥚 Behavioral & Soft Skills
+
+Cross-Functional Team Experience:
+Worked with DevOps, QA, and UI/UX in Agile sprints to launch a Lab module.
+
+Production Issue Handling:
+Use logs and metrics to isolate, rollback if needed, patch, and document the fix.
+
+Technical Decision Example:
+Switched from REST to gRPC for inter-service communication, reducing latency by 40%.
+
+Disagreement with Product Owner:
+I present technical reasoning, propose compromises, and align with business goals.
+
+Time Management:
+Use Kanban for task tracking, prioritize based on impact, and block focused coding hours.
+
+✅ Bonus: Live Coding Prep
+
+WebFlux Patient Registration API:
+
+Endpoint: POST /patients
+
+Tech: Spring WebFlux, DTO validation, service layer, R2DBC repo, Mono<Patient> response.
+
+Appointment Booking Form:
+
+React form with react-hook-form, validation via yup, calendar UI, and async submit.
+
+Kafka Consumer for Lab Results:
+
+Spring Kafka consumer with @KafkaListener, deserialization of lab result event, DB write via R2DBC.
+
+Secure API with JWT/Keycloak:
+
+Setup Spring Security, validate Keycloak JWT, secure endpoints via @PreAuthorize.
+
+Dashboard in React + Tailwind:
+
+Grid layout with cards, charts, KPI indicators, responsive sidebar using flex and grid.
+
+
+
